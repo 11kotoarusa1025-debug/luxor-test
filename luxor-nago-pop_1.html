@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ルクソール名護店 - ホーム画面に追加</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ルクソール名護">
+  <meta name="theme-color" content="#2ecc40">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Fredoka+One&display=swap');
+
+    :root {
+      --green: #27ae60;
+      --green-light: #2ecc71;
+      --green-dark: #1e8449;
+      --yellow: #f1c40f;
+      --yellow-dark: #d4ac0d;
+      --orange: #e67e22;
+      --white: #ffffff;
+      --bg: #f0fff4;
+      --card: #ffffff;
+      --text: #1a4731;
+      --text-sub: #5d8a6e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* カラフルな背景ドット */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(46,204,113,0.15) 2px, transparent 2px),
+        radial-gradient(circle, rgba(241,196,15,0.12) 2px, transparent 2px);
+      background-size: 40px 40px, 60px 60px;
+      background-position: 0 0, 20px 20px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ヘッダーバナー */
+    .header-banner {
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 50%, var(--yellow) 100%);
+      border-radius: 0 0 32px 32px;
+      padding: 32px 24px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 24px rgba(39,174,96,0.35);
+      animation: slideDown 0.5s ease both;
+    }
+
+    .header-banner::before {
+      content: '🎰';
+      position: absolute;
+      font-size: 80px;
+      opacity: 0.08;
+      top: -10px;
+      left: -10px;
+      transform: rotate(-15deg);
+    }
+
+    .header-banner::after {
+      content: '🃏';
+      position: absolute;
+      font-size: 70px;
+      opacity: 0.08;
+      bottom: -10px;
+      right: -5px;
+      transform: rotate(10deg);
+    }
+
+    /* マスコット */
+    .mascot-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 12px;
+      animation: bounce 1.5s ease infinite;
+    }
+
+    .mascot-img {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+    }
+
+    .mascot-bubble {
+      position: absolute;
+      top: -14px;
+      right: -30px;
+      background: var(--yellow);
+      border-radius: 20px 20px 20px 4px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--text);
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      animation: pop 0.6s 0.3s ease both;
+    }
+
+    .shop-name {
+      font-family: 'Fredoka One', cursive;
+      font-size: 26px;
+      color: var(--white);
+      letter-spacing: 2px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      margin-bottom: 4px;
+    }
+
+    .shop-name-jp {
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+
+    /* メインカード */
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 24px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 20px rgba(39,174,96,0.12);
+      border: 2px solid rgba(46,204,113,0.2);
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--green-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title .emoji { font-size: 20px; }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    /* Androidボタン */
+    .btn-android {
+      display: none;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--green-light), var(--green));
+      border: none;
+      border-radius: 16px;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(46,204,113,0.45), 0 0 0 3px rgba(46,204,113,0.15);
+      transition: all 0.2s;
+    }
+
+    .btn-android:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(46,204,113,0.3);
+    }
+
+    .btn-android.visible { display: block; animation: pulse-green 2s ease infinite; }
+
+    /* iOS手順カード */
+    .ios-card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 24px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 20px rgba(39,174,96,0.12);
+      border: 2px solid rgba(46,204,113,0.2);
+      animation: fadeUp 0.5s 0.15s ease both;
+    }
+
+    .ios-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ios-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #555, #222);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: var(--bg);
+      border: 2px solid transparent;
+      border-radius: 16px;
+      transition: all 0.4s ease;
+    }
+
+    .step.active {
+      border-color: var(--green-light);
+      background: rgba(46,204,113,0.08);
+      transform: translateX(4px);
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-light), var(--green));
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(46,204,113,0.35);
+    }
+
+    .step.active .step-num {
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      box-shadow: 0 2px 8px rgba(230,126,34,0.35);
+    }
+
+    .step-content { flex: 1; }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .step-detail {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .step-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    /* 矢印 */
+    .arrow {
+      text-align: center;
+      font-size: 20px;
+      color: var(--green-light);
+      padding: 4px 0;
+      animation: arrowBounce 1.2s ease infinite;
+    }
+
+    /* サイトアクセスボタン */
+    .access-card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(39,174,96,0.12);
+      border: 2px solid rgba(46,204,113,0.2);
+      animation: fadeUp 0.5s 0.3s ease both;
+    }
+
+    .access-label {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .btn-site {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      border: 2px solid var(--green-light);
+      border-radius: 14px;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--green-dark);
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-site:active {
+      background: rgba(46,204,113,0.1);
+    }
+
+    /* 成功メッセージ */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: rgba(46,204,113,0.1);
+      border: 2px solid var(--green-light);
+      border-radius: 16px;
+      margin-top: 14px;
+    }
+
+    .success-msg.show { display: block; }
+    .success-msg .emoji { font-size: 36px; margin-bottom: 8px; }
+    .success-msg p { font-size: 15px; color: var(--green-dark); font-weight: 900; }
+
+    /* アニメーション */
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    @keyframes arrowBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(4px); }
+    }
+    @keyframes pop {
+      0%   { opacity: 0; transform: scale(0.5); }
+      80%  { transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulse-green {
+      0%, 100% { box-shadow: 0 4px 16px rgba(46,204,113,0.45), 0 0 0 3px rgba(46,204,113,0.15); }
+      50%       { box-shadow: 0 4px 28px rgba(46,204,113,0.7), 0 0 0 6px rgba(46,204,113,0.2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ヘッダーバナー -->
+    <div class="header-banner">
+      <div class="mascot-wrap">
+        <img class="mascot-img"
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlMAAANKCAYAAACu78sPAAFI+UlEQVR42uy9C5gcZZ3v/3ZP90zPvWcykwwJkAETSSCauIugLsKgLJfzLEk4sq76CARxfTz+5eqz56yPchN89pzHI3Jx/XtZlgDuUVGOSfzvQXDVEHFFYZeEw0KQABMgIZdJMvdrT/f//b5dNenp6e56q7qqu6rr++EpujNT05fq6qpP/X6/9/cKQQghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEFIdItwEhJBiJGKxpLxZJ5deY1krl2TOvwflskUut0+mUv3cYoQQyhQhhOIkRJ9czssRJh0gVedLodrJLUkIoUwRQsIiT7054tRnQ5yK0S9l6hRuWUIIZYoQUssCBWnaYMjTOg+e4jIpVFu4pQkhYSLGTUBIzQvURkOgcJv0+OkgaJQpQghlihASeIGC1FxfIYHKZZBbnxBCmSKEBFWgIE2bDInqrdLLYAE6IYQyRQgJnERBnG4VlY9CUaYIIYQyRQgJjERBnIZfUaYIIYQyRQihTBFCKFOEEMoUIYQyRQghhFCmCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgipDhFuAkJIMRKxWFLerBMlr7EsK5dkzr8H5bJFLrdPplL93GKEEMoUIYTiJESfXM7LESYdIFXnS6HayS1JCKFMEULCIs+9OeLUZ0OcitEvZeoUblnqKFJ4AAAgAElEQVRCCGWKEFLLAgVp2mDI0zoPnuIyKVRbuKUJIWEixk1AaM0L1EZDoHCb9PjpIGiUKUIIZYoQEngBAhFUp9dXSKByGeS2J4RQpgghQQUoUO8KSmNQpgAAHgwVIJSlAKQAAAABJRU5ErkJggg=="
+          alt="マスコット" onerror="this.style.display='none'">
+        <div class="mascot-bubble">いらっしゃい！🎰</div>
+      </div>
+      <div class="shop-name">LUXOR NAGO</div>
+      <div class="shop-name-jp">ルクソール名護店</div>
+    </div>
+
+    <!-- メインカード -->
+    <div class="card">
+      <div class="card-title">
+        <span class="emoji">📲</span>
+        ホーム画面に追加しよう！
+      </div>
+      <div class="card-desc">
+        アイコンをタップするだけで、いつでもすぐにアクセスできるよ！アプリみたいに使えてめちゃ便利！
+      </div>
+
+      <button class="btn-android" id="installBtn" onclick="installApp()">
+        ✨ ホーム画面に追加する ✨
+      </button>
+
+      <div class="success-msg" id="successMsg">
+        <div class="emoji">🎉</div>
+        <p>追加完了！ありがとう！</p>
+      </div>
+    </div>
+
+    <!-- iPhone手順 -->
+    <div class="ios-card" id="iosGuide">
+      <div class="ios-title">
+        <div class="ios-icon">🍎</div>
+        iPhone をお使いの方はコチラ！
+      </div>
+      <div class="step-list">
+        <div class="step" id="step1">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-label">Safari で開く</div>
+            <div class="step-detail">このページを Safari ブラウザで開いてください</div>
+          </div>
+          <div class="step-icon">🌐</div>
+        </div>
+
+        <div class="arrow">▼</div>
+
+        <div class="step" id="step2">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-label">共有ボタンをタップ</div>
+            <div class="step-detail">画面下部中央の共有ボタン（⬆マーク）をタップ</div>
+          </div>
+          <div class="step-icon">⬆️</div>
+        </div>
+
+        <div class="arrow">▼</div>
+
+        <div class="step" id="step3">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-label">「ホーム画面に追加」をタップ</div>
+            <div class="step-detail">メニューをスクロールして選んでね</div>
+          </div>
+          <div class="step-icon">＋</div>
+        </div>
+
+        <div class="arrow">▼</div>
+
+        <div class="step" id="step4">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-label">「追加」をタップして完了！</div>
+            <div class="step-detail">右上の「追加」を押せば登録完了🎉</div>
+          </div>
+          <div class="step-icon">✅</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- サイトボタン -->
+    <div class="access-card">
+      <div class="access-label">▶ まずはサイトをチェック！</div>
+      <a class="btn-site" href="https://p-town.dmm.com/shops/okinawa/11664" target="_blank">
+        🎰 DMMぱちタウン ルクソール名護店 🎰
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    // PWAインストールプロンプト（Android対応）
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installBtn').classList.add('visible');
+      document.getElementById('iosGuide').style.display = 'none';
+    });
+
+    async function installApp() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        document.getElementById('installBtn').style.display = 'none';
+        document.getElementById('successMsg').classList.add('show');
+      }
+      deferredPrompt = null;
+    }
+
+    // iOSステップのアニメーション
+    const steps = ['step1','step2','step3','step4'];
+    let currentStep = 0;
+
+    function highlightSteps() {
+      steps.forEach(id => document.getElementById(id).classList.remove('active'));
+      document.getElementById(steps[currentStep]).classList.add('active');
+      currentStep = (currentStep + 1) % steps.length;
+    }
+
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      highlightSteps();
+      setInterval(highlightSteps, 2000);
+    }
+
+    // ホーム画面から起動済みの場合
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      document.querySelector('.card').innerHTML = `
+        <div style="text-align:center;padding:12px 0">
+          <div style="font-size:52px;margin-bottom:12px">🎰🎉🎰</div>
+          <div style="font-size:17px;font-weight:900;color:#1e8449;margin-bottom:6px">ホーム画面から起動中！</div>
+          <div style="font-size:13px;color:#5d8a6e;">いつでもすぐアクセスできるよ！</div>
+        </div>
+      `;
+      document.getElementById('iosGuide').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
